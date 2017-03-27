@@ -4,7 +4,7 @@ COPY package.json .
 RUN npm install
 COPY . .
 
-ENV PUBLIC_URL https://microfrontends-homepage.herokuapp.com/cart
+ENV PUBLIC_URL https://microfrontends.herokuapp.com/cart
 
 RUN npm run build
 RUN npm run transpile
