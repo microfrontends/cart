@@ -102,6 +102,14 @@ module.exports = {
       // The `exclude` list *must* be updated with every change to loader extensions.
       // When adding a new loader, you must add its `test`
       // as a new entry in the `exclude` list in the "url" loader.
+      {
+        test: /\.js$/,
+        loader: 'safe-externals-loader',
+        query: JSON.stringify({
+          react: ['React'],
+          'react-dom': ['ReactDOM']
+        })
+      },
 
       // "url" loader embeds assets smaller than specified size as data URLs to avoid requests.
       // Otherwise, it acts like the "file" loader.
