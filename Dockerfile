@@ -1,12 +1,14 @@
 FROM node
 
-COPY package.json .
-RUN npm install
+RUN npm -g install elm
+RUN npm -g install http-server
+
+COPY elm-package.json .
+RUN elm package install --yes
 COPY . .
 
 ENV PUBLIC_URL https://microfrontends.herokuapp.com/cart
 
-RUN npm run build
-RUN npm run transpile
+RUN ./build.sh
 
-CMD PORT=$PORT npm run start:prod
+CMD http-server -p $PORT dist

@@ -1,0 +1,9 @@
+<div id="cart-main"></div>
+<script src="dist/bundle.js"></script>
+<script>
+  var app = Elm.Cart.embed(document.getElementById('cart-main'));
+
+  window.addEventListener('addToCart', (event) => {
+    app.ports.addToCartEvents.send(event.detail);
+  }, false);
+</script>
