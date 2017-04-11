@@ -1,6 +1,7 @@
 port module Cart exposing (..)
 
 import Html exposing (program, nav, h2, text, p, ul, li)
+import Json.Decode as Decode
 
 
 main : Program Never Model Msg
@@ -49,19 +50,32 @@ cartItem product =
 
 
 type Msg
-    = AddToCart Product
+    = AddToCart (Result String Product)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        AddToCart product ->
-            ( { model | products = model.products ++ [ product ] }, Cmd.none )
+        AddToCart result ->
+            case result of
+                Ok product ->
+                    ( { model | products = model.products ++ [ product ] }, Cmd.none )
+
+                Err _ ->
+                    ( model, Cmd.none )
 
 
-port addToCartEvents : (Product -> msg) -> Sub msg
+port addToCartEvents : (Decode.Value -> msg) -> Sub msg
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    addToCartEvents AddToCart
+    addToCartEvents (decodeCartItem >> AddToCart)
+
+
+decodeCartItem : Decode.Value -> Result String Product
+decodeCartItem =
+    Decode.decodeValue <|
+        Decode.map2 Product
+            (Decode.field "product" Decode.string)
+            (Decode.field "price" Decode.float)
